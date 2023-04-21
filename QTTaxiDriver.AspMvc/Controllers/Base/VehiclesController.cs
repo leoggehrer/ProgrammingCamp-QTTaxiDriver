@@ -28,46 +28,74 @@ namespace QTTaxiDriver.AspMvc.Controllers.Base
         }
 
         // GET: VehiclesController/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            var entity = _dataAccess.Create();
+            var model = TModel.Create(_dataAccess.Create());
 
-            return View(TModel.Create(entity));
+            await LoadCompaniesAsync(model);
+            return View(model);
         }
 
         // POST: VehiclesController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public async Task<ActionResult> Create(TModel viewModel)
         {
             try
             {
+                var entity = _dataAccess.Create();
+
+                entity.CopyFrom(viewModel);
+                await _dataAccess.InsertAsync(entity);
+                await _dataAccess.SaveChangesAsync();
+
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ViewBag.Error = ex.Message;
+                await LoadCompaniesAsync(viewModel);
+                return View(viewModel);
             }
         }
 
         // GET: VehiclesController/Edit/5
-        public ActionResult Edit(int id)
+        public async Task<ActionResult> Edit(int id)
         {
-            return View();
+            var model = default(TModel);
+            var entity = await _dataAccess.GetByIdAsync(id);
+
+            if (entity != default)
+            {
+                model = TModel.Create(entity);
+                await LoadCompaniesAsync(model);
+            }
+            return View(model);
         }
 
         // POST: VehiclesController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public async Task<ActionResult> Edit(int id, TModel viewModel)
         {
             try
             {
+                var entity = await _dataAccess.GetByIdAsync(id);
+
+                if (entity != null)
+                {
+                    entity.CopyFrom(viewModel);
+
+                    await _dataAccess.UpdateAsync(entity);
+                    await _dataAccess.SaveChangesAsync();
+                }
                 return RedirectToAction(nameof(Index));
             }
-            catch
+            catch (Exception ex)
             {
-                return View();
+                ViewBag.Error = ex.Message;
+                await LoadCompaniesAsync(viewModel);
+                return View(viewModel);
             }
         }
 
@@ -89,6 +117,33 @@ namespace QTTaxiDriver.AspMvc.Controllers.Base
             catch
             {
                 return View();
+            }
+        }
+
+        public async Task<ActionResult> RemoveDriver(int vehicleId, int driverId)
+        {
+            using var driversAccess = HttpContext.RequestServices.GetService<Logic.Contracts.Base.IDriversAccess>();
+            var vehicle = await _dataAccess.GetByIdAsync(vehicleId);
+            var driver = await driversAccess!.GetByIdAsync(driverId);
+
+            if (vehicle != default && driver != default)
+            {
+                vehicle.Drivers.Remove(driver);
+
+                await _dataAccess.UpdateAsync(vehicle);
+                await _dataAccess.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Edit), new { id = vehicleId });
+        }
+        private async Task LoadCompaniesAsync(TModel viewModel)
+        {
+            using var companiesAccess = HttpContext.RequestServices.GetService<Logic.Contracts.Base.ICompaniesAccess>();
+
+            if (companiesAccess != default)
+            {
+                var companies = await companiesAccess.GetAllAsync();
+
+                viewModel.Companies = companies.Select(e => Models.Base.Company.Create(e)).ToList();
             }
         }
     }

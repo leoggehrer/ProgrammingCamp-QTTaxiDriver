@@ -1,8 +1,29 @@
-﻿namespace QTTaxiDriver.Logic.Controllers.Base
+﻿using QTTaxiDriver.Logic.Models.Base;
+using QTTaxiDriver.Logic.Modules.Exceptions;
+
+namespace QTTaxiDriver.Logic.Controllers.Base
 {
     partial class VehiclesController
     {
         internal override IEnumerable<string> Includes => new string[] { nameof(Entities.Base.Vehicle.Company), nameof(Entities.Base.Vehicle.Drivers) };
+
+        protected override void ValidateEntity(ActionType actionType, Entities.Base.Vehicle entity)
+        {
+            if (entity.ApprovalDate > DateTime.Now)
+            {
+                throw new LogicException("Invalid date value!");
+            }
+            base.ValidateEntity(actionType, entity);
+        }
+        public override Vehicle Create()
+        {
+            var result = base.Create();
+
+            result.ApprovalDate = DateTime.Now;
+
+            return result;
+        }
+
         public Task<Models.Base.Vehicle[]> QueryByAsync(string? type, string? companyOrBrand)
         {
             var query = EntitySet.AsQueryable();

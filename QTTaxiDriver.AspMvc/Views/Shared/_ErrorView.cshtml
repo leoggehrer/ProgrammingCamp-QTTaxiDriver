@@ -1,0 +1,9 @@
+﻿@model string
+
+
+@if (string.IsNullOrEmpty(Model) == false)
+{
+    <div class="alert alert-danger" role="alert">
+        @Model
+    </div>
+}
