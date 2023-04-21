@@ -1,0 +1,58 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="QTTaxiDriver.Logic.Entities.Base.Company">
+    <Position X="0.5" Y="4.75" Width="1.5" />
+    <AssociationLine Name="Vehicles" Type="QTTaxiDriver.Logic.Entities.Base.Vehicle">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.54" Y="0.318" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAgAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\Base\Company.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Vehicles" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="QTTaxiDriver.Logic.Entities.Base.Driver">
+    <Position X="4.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Entities\Base\Driver.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Vehicles" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="QTTaxiDriver.Logic.Entities.Base.Vehicle">
+    <Position X="0.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>BAIAAAAAAAIAAAAAAAAAAAAAAAAAAAAAAQAABAABAAA=</HashCode>
+      <FileName>Entities\Base\Vehicle.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Company" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="Drivers" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="QTTaxiDriver.Logic.Entities.App.Drive">
+    <Position X="4.25" Y="2.75" Width="1.5" />
+    <AssociationLine Name="Vehicle" Type="QTTaxiDriver.Logic.Entities.Base.Vehicle">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.815" Y="0.177" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAABAAAAAAAAAABAAAgABBAAAAAAAAAAA=</HashCode>
+      <FileName>Entities\App\Drive.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Driver" />
+      <Property Name="Vehicle" />
+    </ShowAsAssociation>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

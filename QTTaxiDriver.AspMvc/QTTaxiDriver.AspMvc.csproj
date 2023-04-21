@@ -1,0 +1,22 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>ACCOUNT_OFF;DBOPERATION_ON;ROWVERSION_OFF;IDINT_ON;IDLONG_OFF;IDGUID_OFF;SQLSERVER_OFF;SQLITE_ON;GENERATEDCODE_ON</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(RunConfiguration)' == 'AspMvc' " />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="7.0.4" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="7.0.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\QTTaxiDriver.Logic\QTTaxiDriver.Logic.csproj" />
+  </ItemGroup>
+</Project>
