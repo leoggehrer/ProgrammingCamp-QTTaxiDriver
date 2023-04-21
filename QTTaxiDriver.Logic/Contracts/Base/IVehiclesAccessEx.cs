@@ -4,6 +4,6 @@
     {
         Task<Models.Base.Vehicle[]> QueryByAsync(string? type, string? companyOrBrand);
 
-        Task<Models.Base.VehicleStatistics> CalculateStatistic(int id);
+        Task<Models.Base.VehicleStatistics> CalculateStatisticsAsync(int id);
     }
 }
