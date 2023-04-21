@@ -1,0 +1,72 @@
+﻿@model IEnumerable<QTTaxiDriver.AspMvc.Models.Base.Vehicle>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Fahrzeuge</h1>
+
+<p>
+    <a asp-action="Create">Fahrzeug erstellen...</a>
+</p>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CompanyId)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ApprovalDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Brand)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Type)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LicensePlate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Mileage)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Company!.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ApprovalDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Brand)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Model)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Type)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LicensePlate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Mileage)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.Id }, new { @class="btn btn-sm btn-outline-primary" })
+                @Html.ActionLink("Details", "Details", new { id=item.Id }, new { @class="btn btn-sm btn-outline-secondary" })
+                    @Html.ActionLink("Löschen", "Delete", new { id=item.Id }, new { @class="btn btn-sm btn-outline-danger" })
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
