@@ -1,13 +1,28 @@
-﻿using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-
-namespace QTTaxiDriver.Logic.Controllers.Base
+﻿namespace QTTaxiDriver.Logic.Controllers.Base
 {
     partial class VehiclesController
     {
         internal override IEnumerable<string> Includes => new string[] { nameof(Entities.Base.Vehicle.Company), nameof(Entities.Base.Vehicle.Drivers) };
         public Task<Models.Base.Vehicle[]> QueryByAsync(string? type, string? companyOrBrand)
         {
-            throw new NotImplementedException();
+            var query = EntitySet.AsQueryable();
+            Modules.Common.VehicleType vt;
+
+            query = query.Include(e => e.Company)
+                         .Include(e => e.Drivers);
+
+            if (string.IsNullOrEmpty(type) == false 
+                && Enum.TryParse<Modules.Common.VehicleType>(type, out vt))
+            {
+                query = query.Where(e => e.Type == vt);
+            }
+
+            if (string.IsNullOrEmpty(companyOrBrand) == false)
+            {
+                query = query.Where(e => e.Company!.Name.Contains(companyOrBrand, StringComparison.CurrentCultureIgnoreCase)
+                                      || e.Brand.ToUpper().Contains(companyOrBrand.ToUpper()));
+            }
+            return query.Select(e => new Models.Base.Vehicle(e)).ToArrayAsync();
         }
 
         public async Task<Models.Base.VehicleStatistics> CalculateStatisticsAsync(int id)
