@@ -19,7 +19,7 @@
 
             if (string.IsNullOrEmpty(companyOrBrand) == false)
             {
-                query = query.Where(e => e.Company!.Name.Contains(companyOrBrand, StringComparison.CurrentCultureIgnoreCase)
+                query = query.Where(e => e.Company!.Name.ToUpper().Contains(companyOrBrand.ToUpper())
                                       || e.Brand.ToUpper().Contains(companyOrBrand.ToUpper()));
             }
             return query.Select(e => new Models.Base.Vehicle(e)).ToArrayAsync();
