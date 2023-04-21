@@ -3,6 +3,7 @@
 
 @{
     var companyList = new SelectList(Model.Companies, "Id", "Name");
+    var addDriverList = new SelectList(Model.AddDrivers, "Id", "Name");
     var typeList = Enum.GetValues(typeof(VehicleType)).Cast<VehicleType>()
                        .Select(x => new SelectListItem
                         {
@@ -72,6 +73,19 @@
 </div>
 
 <hr />
+
+<form asp-action="AddDriver" method="get">
+    <input name="vehicleId" value="@Model.Id" type="hidden" />
+
+    <dl class="row">
+        <dt class="col-sm-4">
+            @Html.DropDownList("driverId", addDriverList, new { @class="form-select"})
+        </dt>
+        <dd class="col-sm-8">
+            <input type="submit" value="+" class="btn btn-primary" />
+        </dd>
+    </dl>
+</form>
 
 @foreach(var item in Model.Drivers)
 {

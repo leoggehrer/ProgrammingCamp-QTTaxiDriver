@@ -69,6 +69,7 @@ namespace QTTaxiDriver.AspMvc.Controllers.Base
             {
                 model = TModel.Create(entity);
                 await LoadCompaniesAsync(model);
+                await LoadAddDriversAsync(model);
             }
             return View(model);
         }
@@ -95,6 +96,8 @@ namespace QTTaxiDriver.AspMvc.Controllers.Base
             {
                 ViewBag.Error = ex.Message;
                 await LoadCompaniesAsync(viewModel);
+                await LoadAddDriversAsync(viewModel);
+
                 return View(viewModel);
             }
         }
@@ -120,6 +123,21 @@ namespace QTTaxiDriver.AspMvc.Controllers.Base
             }
         }
 
+        public async Task<ActionResult> AddDriver(int vehicleId, int driverId)
+        {
+            using var driversAccess = HttpContext.RequestServices.GetService<Logic.Contracts.Base.IDriversAccess>();
+            var vehicle = await _dataAccess.GetByIdAsync(vehicleId);
+            var driver = await driversAccess!.GetByIdAsync(driverId);
+
+            if (vehicle != default && driver != default)
+            {
+                vehicle.Drivers.Add(driver);
+
+                await _dataAccess.UpdateAsync(vehicle);
+                await _dataAccess.SaveChangesAsync();
+            }
+            return RedirectToAction(nameof(Edit), new { id = vehicleId });
+        }
         public async Task<ActionResult> RemoveDriver(int vehicleId, int driverId)
         {
             using var driversAccess = HttpContext.RequestServices.GetService<Logic.Contracts.Base.IDriversAccess>();
@@ -144,6 +162,19 @@ namespace QTTaxiDriver.AspMvc.Controllers.Base
                 var companies = await companiesAccess.GetAllAsync();
 
                 viewModel.Companies = companies.Select(e => Models.Base.Company.Create(e)).ToList();
+            }
+        }
+        private async Task LoadAddDriversAsync(TModel viewModel)
+        {
+            using var driversAccess = HttpContext.RequestServices.GetService<Logic.Contracts.Base.IDriversAccess>();
+
+            if (driversAccess != default)
+            {
+                var exitsIds = viewModel.Drivers.Select(d => d.Id).ToArray();
+                var drivers = await driversAccess.GetAllAsync();
+                var addDrivers = drivers.Where(d => exitsIds.Contains(d.Id) == false);
+
+                viewModel.AddDrivers = addDrivers.Select(d => Models.Base.Driver.Create(d)).ToList();
             }
         }
     }

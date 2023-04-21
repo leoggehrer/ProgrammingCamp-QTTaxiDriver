@@ -25,6 +25,7 @@ namespace QTTaxiDriver.AspMvc.Models.Base
         #endregion Navigation properties
 
         public List<Company> Companies { get; set; } = new();
+        public List<Driver> AddDrivers { get; set; } = new();
         public static Vehicle Create(Logic.Models.Base.Vehicle entity)
         {
             return new Vehicle
