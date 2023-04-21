@@ -20,7 +20,6 @@ namespace QTTaxiDriver.Logic.Controllers.Base
                 using var drivesCtrl = new App.DrivesController(this);
                 var drives = await drivesCtrl.ExecuteQueryAsync(e => e.VehicleId == id).ConfigureAwait(false);
 
-
                 result.CompanyName = vehicle.Company?.Name;
                 result.Brand = vehicle.Brand;
                 result.Model = vehicle.Model;
