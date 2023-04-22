@@ -16,12 +16,43 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40*"></RowDefinition>
-            <RowDefinition Height="60*"></RowDefinition>
+            <RowDefinition Height="35"></RowDefinition>
+            <RowDefinition Height="30*"></RowDefinition>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"></ColumnDefinition>
         </Grid.ColumnDefinitions>
         <Image Grid.Row="0" Stretch="UniformToFill" Source="Images/home.jpg"/>
 
+        <StackPanel Grid.Row="1" Grid.Column="0" Orientation="Horizontal">
+            <Label Margin="2" Content="Filter:"></Label>
+            <TextBox Margin="2" Text="{Binding Path=FilterText, UpdateSourceTrigger=PropertyChanged}" Width="250"></TextBox>
+            <Button Width="50" Command="{Binding Path=CommandAdd}" Background="Transparent" Foreground="Green" Margin="5" >+</Button>
+            <Button Width="100" Command="{Binding Path=CommandEdit}" Margin="5" >Bearbeiten</Button>
+            <Button Width="100" Command="{Binding Path=CommandDelete}" Background="Transparent" Foreground="Red" Margin="5">Löschen</Button>
+        </StackPanel>
+        <StackPanel Grid.Row="2" Grid.Column="0" Orientation="Vertical">
+            <DataGrid ItemsSource="{Binding Path=Vehicles}"
+                      Height="170"
+                      SelectedItem="{Binding Path=SelectedVehicle}"
+                      AutoGenerateColumns="False"
+                      CanUserAddRows="False"
+                      CanUserDeleteRows="False"
+                      IsReadOnly="True"
+                      SelectionMode="Single"
+                      ScrollViewer.CanContentScroll="True"
+                      ScrollViewer.VerticalScrollBarVisibility="Visible">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Width="100" Header="Firma" Binding="{Binding Path=CompanyName}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="Zulassung" Binding="{Binding Path=ApprovalDate}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="Marke" Binding="{Binding Path=Brand}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="Model" Binding="{Binding Path=Model}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="Typ" Binding="{Binding Path=Type}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="100" Header="Nummer" Binding="{Binding Path=LicensePlate}"></DataGridTextColumn>
+                    <DataGridTextColumn Width="*" Header="km" Binding="{Binding Path=Mileage}"></DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+        </StackPanel>
+        
     </Grid>
 </Window>
