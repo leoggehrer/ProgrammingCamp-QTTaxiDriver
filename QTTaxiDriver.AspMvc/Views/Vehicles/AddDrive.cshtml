@@ -1,0 +1,49 @@
+﻿@model QTTaxiDriver.AspMvc.Models.App.Drive
+
+@{
+    ViewData["Title"] = "AddDrive";
+}
+
+<h1>Erstellen</h1>
+
+<h4>Fahrt</h4>
+<hr />
+
+@await Html.PartialAsync("_ErrorView", ViewBag.Error as string)
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddDrive">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <input asp-for="VehicleId" type="hidden" />
+            <input asp-for="DriverId" type="hidden" />
+            <div class="form-group">
+                <label asp-for="VehicleId" class="control-label"></label>
+                <input asp-for="Vehicle!.Model" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group">
+                <label asp-for="DriverId" class="control-label"></label>
+                <input asp-for="Driver!.Name" class="form-control" readonly="readonly" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Distance" class="control-label"></label>
+                <input asp-for="Distance" class="form-control" />
+                <span asp-validation-for="Distance" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Speichern" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Zurück zur Übersicht</a>
+</div>
+

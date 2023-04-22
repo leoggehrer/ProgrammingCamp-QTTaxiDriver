@@ -22,9 +22,18 @@ namespace QTTaxiDriver.AspMvc.Controllers.Base
         }
 
         // GET: VehiclesController/Details/5
-        public ActionResult Details(int id)
+        public async Task<ActionResult> Details(int id)
         {
-            return View();
+            var model = default(TModel);
+            var vehicle = await _dataAccess.GetByIdAsync(id);
+
+            if (vehicle != default)
+            {
+                model = TModel.Create(vehicle);
+                model.Statistics = await _dataAccess.CalculateStatisticsAsync(id);
+                await LoadDrivesAsync(model);
+            }
+            return model != default ? View(model) : NotFound();
         }
 
         // GET: VehiclesController/Create
@@ -153,6 +162,42 @@ namespace QTTaxiDriver.AspMvc.Controllers.Base
             }
             return RedirectToAction(nameof(Edit), new { id = vehicleId });
         }
+
+        public async Task<ActionResult> AddDrive(int vehicleId, int driverId)
+        {
+            var model = new Models.App.Drive()
+            {
+                Date = DateTime.UtcNow,
+            };
+
+            model.VehicleId = vehicleId;
+            model.DriverId = driverId;
+            await LoadDriveAsync(model);
+            return View(model);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddDrive(Models.App.Drive viewModel)
+        {
+            try
+            {
+                using var drivesAccess = HttpContext.RequestServices.GetService<Logic.Contracts.App.IDrivesAccess>();
+                var entity = drivesAccess!.Create();
+
+                entity.CopyFrom(viewModel);
+
+                await drivesAccess.InsertAsync(entity);
+                await drivesAccess.SaveChangesAsync();
+                return RedirectToAction(nameof(Details), new { id = viewModel.VehicleId });
+            }
+            catch (Exception ex)
+            {
+                ViewBag.Error = ex.Message;
+                await LoadDriveAsync(viewModel);
+                return View(viewModel);
+            }
+        }
+
         private async Task LoadCompaniesAsync(TModel viewModel)
         {
             using var companiesAccess = HttpContext.RequestServices.GetService<Logic.Contracts.Base.ICompaniesAccess>();
@@ -175,6 +220,29 @@ namespace QTTaxiDriver.AspMvc.Controllers.Base
                 var addDrivers = drivers.Where(d => exitsIds.Contains(d.Id) == false);
 
                 viewModel.AddDrivers = addDrivers.Select(d => Models.Base.Driver.Create(d)).ToList();
+            }
+        }
+        private async Task LoadDrivesAsync(TModel viewModel)
+        {
+            using var drivesAccess = HttpContext.RequestServices.GetService<Logic.Contracts.App.IDrivesAccess>();
+
+            if (drivesAccess != default)
+            {
+                var drives = await drivesAccess.QueryAsync($"VehicleId=={viewModel.Id}");
+
+                viewModel.Drives = drives.Select(e => Models.App.Drive.Create(e)).ToList();
+            }
+        }
+        private async Task LoadDriveAsync(Models.App.Drive viewModel)
+        {
+            using var driversAccess = HttpContext.RequestServices.GetService<Logic.Contracts.Base.IDriversAccess>();
+            var vehicle = await _dataAccess.GetByIdAsync(viewModel.VehicleId);
+            var driver = await driversAccess!.GetByIdAsync(viewModel.DriverId);
+
+            if (vehicle != default && driver != default)
+            {
+                viewModel.Vehicle = Models.Base.Vehicle.Create(vehicle);
+                viewModel.Driver = Models.Base.Driver.Create(driver);
             }
         }
     }

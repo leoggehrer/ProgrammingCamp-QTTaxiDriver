@@ -1,9 +1,18 @@
-﻿namespace QTTaxiDriver.Logic.Controllers.App
+﻿using QTTaxiDriver.Logic.Models.App;
+
+namespace QTTaxiDriver.Logic.Controllers.App
 {
     partial class DrivesController
     {
         internal override IEnumerable<string> Includes => new string[] { nameof(Entities.App.Drive.Vehicle), nameof(Entities.App.Drive.Driver) };
 
+        public override Drive Create()
+        {
+            var result = base.Create();
+
+            result.Date = DateTime.UtcNow;
+            return result;
+        }
         protected override void ValidateEntity(ActionType actionType, Entities.App.Drive entity)
         {
             if (entity.Date > DateTime.UtcNow)

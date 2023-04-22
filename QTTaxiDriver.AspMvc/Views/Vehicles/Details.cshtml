@@ -1,0 +1,118 @@
+﻿@model QTTaxiDriver.AspMvc.Models.Base.Vehicle
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Fahrzeug</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.CompanyId)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Company!.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ApprovalDate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ApprovalDate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Brand)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Brand)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Model)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Model)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Type)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Type)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.LicensePlate)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.LicensePlate)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Mileage)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Mileage)
+        </dd>
+    </dl>
+</div>
+
+<h3>Fahrzeug-Information</h3>
+<hr />
+<dl class="row">
+    <dd class="col-sm-4">
+        Gesamtsumme
+    </dd>
+    <dd class="col-sm-8">
+        @Model.Statistics!.TotalDistance
+    </dd>
+    <dd class="col-sm-4">
+        Durchschnitt pro Fahrer
+    </dd>
+    <dd class="col-sm-8">
+        @Model.Statistics!.AverageDistance
+    </dd>
+</dl>
+<hr />
+
+@foreach(var item in Model.Statistics!.DriverStatistics)
+{
+    var dif = item.TotalDistance - Model.Statistics!.AverageDistance;
+    var strStyle = dif >= 0 ? "color: green;" : "color: red;";
+
+    <dl class="row">
+        <dd class="col-sm-4">
+            @item.Name
+        </dd>
+        <dd class="col-sm-2">
+            @item.TotalDistance
+        </dd>
+        <dd class="col-sm-2" style="@strStyle">
+            @dif
+        </dd>
+        <dd class="col-sm-2" style="@strStyle">
+            @Html.ActionLink("Fahrt hinzufügen", "AddDrive", new { vehicleId = Model.Id, driverId = item.Id}, new { @class="btn btn-sm btn-primary "})
+        </dd>
+    </dl>
+}
+
+<h3>Fahrten</h3>
+<hr />
+
+@foreach(var item in Model.Drives)
+{
+    <dl class="row">
+        <dd class="col-sm-4">
+            @item.Driver!.Name
+        </dd>
+        <dd class="col-sm-2">
+            @item.Date
+        </dd>
+        <dd class="col-sm-2">
+            @item.Distance
+        </dd>
+    </dl>
+}
+
+<div>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }, new { @class="btn btn-sm btn-primary"}) |
+    <a asp-action="Index">Back to List</a>
+</div>

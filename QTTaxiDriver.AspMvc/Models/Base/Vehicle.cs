@@ -1,4 +1,5 @@
-﻿using QTTaxiDriver.Logic.Modules.Common;
+﻿using QTTaxiDriver.AspMvc.Models.App;
+using QTTaxiDriver.Logic.Modules.Common;
 
 namespace QTTaxiDriver.AspMvc.Models.Base
 {
@@ -26,6 +27,9 @@ namespace QTTaxiDriver.AspMvc.Models.Base
 
         public List<Company> Companies { get; set; } = new();
         public List<Driver> AddDrivers { get; set; } = new();
+
+        public List<Drive> Drives { get; set; } = new();
+        public Logic.Models.Base.VehicleStatistics? Statistics { get; set; }
         public static Vehicle Create(Logic.Models.Base.Vehicle entity)
         {
             return new Vehicle
