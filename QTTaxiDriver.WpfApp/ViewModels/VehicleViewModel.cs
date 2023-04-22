@@ -44,8 +44,8 @@ namespace QTTaxiDriver.WpfApp.ViewModels
         public Models.Base.Driver[] AddDrivers => _addDrivers.ToArray();
         public Models.Base.Company[] Companies => _companies.ToArray();
 
-        public ICommand CommandAddDriver => RelayCommand.Create(ref _cmdAddDriver, p => AddDriverAsync(), p => SelectedAddDriver != default);
-        public ICommand CommandRemoveDriver => RelayCommand.Create(ref _cmdRemoveDriver, p => RemoveDriverAsync(), p => SelectedRemoveDriver != default);
+        public ICommand CommandAddDriver => RelayCommand.Create(ref _cmdAddDriver, async p => await AddDriverAsync().ConfigureAwait(false), p => SelectedAddDriver != default);
+        public ICommand CommandRemoveDriver => RelayCommand.Create(ref _cmdRemoveDriver, async p => await RemoveDriverAsync().ConfigureAwait(false), p => SelectedRemoveDriver != default);
 
         private async Task AddDriverAsync()
         {
