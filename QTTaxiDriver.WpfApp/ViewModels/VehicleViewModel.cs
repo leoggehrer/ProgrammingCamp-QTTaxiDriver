@@ -78,7 +78,7 @@ namespace QTTaxiDriver.WpfApp.ViewModels
                 using var vehiclesCtrl = new Logic.Controllers.Base.VehiclesController();
                 using var driversCtrl = new Logic.Controllers.Base.DriversController();
                 var vehicle = await vehiclesCtrl.GetByIdAsync(Model.Id).ConfigureAwait(false);
-                var driver = await driversCtrl.GetByIdAsync(SelectedAddDriver!.Id).ConfigureAwait(false);
+                var driver = await driversCtrl.GetByIdAsync(SelectedRemoveDriver!.Id).ConfigureAwait(false);
 
                 if (vehicle != default && driver != default)
                 {
