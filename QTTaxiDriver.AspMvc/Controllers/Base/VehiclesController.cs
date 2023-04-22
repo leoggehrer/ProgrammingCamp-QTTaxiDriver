@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace QTTaxiDriver.AspMvc.Controllers.Base
 {
-    using TModel = QTTaxiDriver.AspMvc.Models.Base.Vehicle;
+    using TModel = Models.Base.Vehicle;
 
     public class VehiclesController : Controller
     {
@@ -21,6 +21,15 @@ namespace QTTaxiDriver.AspMvc.Controllers.Base
             return View(models);
         }
 
+        public async Task<ActionResult> Filter(string? type, string? filterText)
+        {
+            var entities = await _dataAccess.QueryByAsync(type, filterText);
+            var models = entities.Select(e => TModel.Create(e));
+
+            ViewBag.FilterText = filterText;
+            ViewBag.FilterType = type;
+            return View(nameof(Index), models);
+        }
         // GET: VehiclesController/Details/5
         public async Task<ActionResult> Details(int id)
         {

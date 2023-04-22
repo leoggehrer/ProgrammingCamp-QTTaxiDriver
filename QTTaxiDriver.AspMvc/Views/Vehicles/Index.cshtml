@@ -1,6 +1,22 @@
 ﻿@model IEnumerable<QTTaxiDriver.AspMvc.Models.Base.Vehicle>
+@using TVehicleType = QTTaxiDriver.Logic.Modules.Common.VehicleType
 
 @{
+    var filterText = ViewBag.FilterText as string;
+    var typeItems = Enum.GetValues(typeof(TVehicleType))
+                        .Cast<TVehicleType>()
+                        .Select(e => new SelectListItem
+                                {
+                                    Text = e.ToString(),
+                                    Value = e.ToString(),
+                                }).ToList();
+
+    typeItems.Insert(0, new SelectListItem
+            {
+                Text = "all",
+                Value = string.Empty,
+            });
+
     ViewData["Title"] = "Index";
 }
 
@@ -9,6 +25,26 @@
 <p>
     <a asp-action="Create">Fahrzeug erstellen...</a>
 </p>
+
+<form asp-action="Filter" method="get">
+    <dl class="row" style="padding: 20px; background: lightgrey;">
+        <dd class="col-sm-1">
+            Typ:
+        </dd>
+        <dd class="col-sm-2">
+            @Html.DropDownList("type", typeItems, new { @class="form-select", onchange="this.form.submit()"})
+        </dd>
+        <dd class="col-sm-2">
+            Firma oder Marke:
+        </dd>
+        <dd class="col-sm-6">
+            <input placeholder="filter" name="filterText" type="text" value="@filterText" class="form-control" />
+        </dd>
+        <dd class="col-sm-1">
+            <button type="submit" class="btn btn-primary">Suchen</button>
+        </dd>
+    </dl>
+</form>
 
 <table class="table">
     <thead>
@@ -38,35 +74,36 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Company!.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApprovalDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Brand)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Model)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Type)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LicensePlate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mileage)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id=item.Id }, new { @class="btn btn-sm btn-outline-primary" })
-                @Html.ActionLink("Details", "Details", new { id=item.Id }, new { @class="btn btn-sm btn-outline-secondary" })
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Company!.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApprovalDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Brand)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Model)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Type)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LicensePlate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Mileage)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id=item.Id }, new { @class="btn btn-sm btn-outline-primary" })
+                    @Html.ActionLink("Details", "Details", new { id=item.Id }, new { @class="btn btn-sm btn-outline-secondary" })
                     @Html.ActionLink("Löschen", "Delete", new { id=item.Id }, new { @class="btn btn-sm btn-outline-danger" })
-            </td>
-        </tr>
-}
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
